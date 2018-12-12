@@ -45,7 +45,7 @@ def scrape_area(area):
     :return: A list of results.
     """
     cl_h = CraigslistHousing(site=settings.CRAIGSLIST_SITE, area=area, category=settings.CRAIGSLIST_HOUSING_SECTION,
-                             filters={'max_price': settings.MAX_PRICE, "min_price": settings.MIN_PRICE})
+            filters={'max_price': settings.MAX_PRICE, "min_price": settings.MIN_PRICE, "min_bedrooms": settings.MIN_BED, "min_bathrooms": settings.MIN_BATH, "min_ft2": settings.MIN_FT2})
 
     results = []
     gen = cl_h.get_results(sort_by='newest', geotagged=True, limit=20)
@@ -57,7 +57,6 @@ def scrape_area(area):
         except Exception:
             continue
         listing = session.query(Listing).filter_by(cl_id=result["id"]).first()
-
         # Don't store the listing if it already exists.
         if listing is None:
             if result["where"] is None:
